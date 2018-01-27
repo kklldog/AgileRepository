@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Agile.Repository
+namespace Agile.Repository.Proxy
 {
     public interface IAgileRepository
     {

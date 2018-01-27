@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Agile.Repository;
-using Agile.Repository.Sql;
+using Agile.Repository.Proxy;
 
 namespace AgileRepositoryWeb.IRepository
 {

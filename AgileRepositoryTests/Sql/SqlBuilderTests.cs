@@ -15,7 +15,7 @@ namespace Agile.Repository.Sql.Tests
         [TestMethod()]
         public void SelectTest()
         {
-            var builder = new SqlBuilder(null);
+            var builder = new SqlserverBuilder();
 
             var selectSql = builder.Select<Users>();
 
@@ -27,15 +27,26 @@ namespace Agile.Repository.Sql.Tests
         [TestMethod()]
         public void MethodNameToWhereTest()
         {
-            var builder = new SqlBuilder(null);
+            var builder = new SqlserverBuilder();
             var name = "QueryByUserName";
             var where = builder.MethodNameToWhere(name);
             Assert.IsNotNull(where);
+            Assert.AreEqual(where,
+                " where UserName=@UserName");
             Console.WriteLine(where);
 
             name = "QueryByUserNameAndId";
             where = builder.MethodNameToWhere(name);
             Assert.IsNotNull(where);
+            Assert.AreEqual(where,
+                " where UserName=@UserName And Id=@Id");
+            Console.WriteLine(where);
+
+            name = "QueryByUserNameAndIdOrNickNameAndChineseName";
+            where = builder.MethodNameToWhere(name);
+            Assert.IsNotNull(where);
+            Assert.AreEqual(where,
+                " where UserName=@UserName And Id=@Id Or NickName=@NickName And ChineseName=@ChineseName");
             Console.WriteLine(where);
         }
     }

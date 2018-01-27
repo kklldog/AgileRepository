@@ -62,7 +62,7 @@
     <Compile Include="AgileRepository.cs" />
     <Compile Include="AgileRepositoryConfig.cs" />
     <Compile Include="Data\DbProviders.cs" />
-    <Compile Include="IAgileRepository.cs" />
+    <Compile Include="Proxy\IAgileRepository.cs" />
     <Compile Include="Data\ConnectionConfig.cs" />
     <Compile Include="Data\ConnectionFactory.cs" />
     <Compile Include="Data\DapperRepository.cs" />
@@ -70,9 +70,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Proxy\InterfaceProxy.cs" />
     <Compile Include="Proxy\IInterfaceProxy.cs" />
-    <Compile Include="Sql\AutoSqlAttribute.cs" />
+    <Compile Include="AutoSqlAttribute.cs" />
     <Compile Include="Sql\QueryHelper.cs" />
     <Compile Include="Sql\SqlBuilder.cs" />
+    <Compile Include="Sql\SqlserverBuilder.cs" />
     <Compile Include="Utils\GenericCallHelper.cs" />
   </ItemGroup>
   <ItemGroup>

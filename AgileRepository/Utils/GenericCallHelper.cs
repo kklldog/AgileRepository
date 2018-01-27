@@ -17,8 +17,10 @@ namespace Agile.Repository.Utils
 
         public static MethodInfo GetGenericMethod(Type type, string method, Type[] genericTypeArguments)
         {
-            return type.GetMethod(method).MakeGenericMethod(genericTypeArguments);
+            var methodInfo = type.GetMethod(method);
+            if (methodInfo != null) return methodInfo.MakeGenericMethod(genericTypeArguments);
 
+            throw new Exception($"Can not find a method {method}");
         }
     }
 }
