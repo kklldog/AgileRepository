@@ -31,15 +31,14 @@ namespace Agile.Repository
             }
         }
 
-        public static void Config(AgileRepositoryConfig config)
+        public static AgileRepositoryConfig Config => _config;
+
+
+        public static void Register(AgileRepositoryConfig config = null)
         {
             _config = config;
+            Proxy.Init(_config?.AssbemlyNames);
         }
 
-        public static void Init(AgileRepositoryConfig config)
-        {
-            _config = config;
-            Proxy.Init(_config);
-        }
     }
 }

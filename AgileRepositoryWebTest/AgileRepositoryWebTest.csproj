@@ -219,9 +219,9 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AgileRepositoryWeb.IRepository\AgileRepositoryWeb.IRepository.csproj">
-      <Project>{a7af24a2-dbd3-45a8-b58e-8f3c4cb90d22}</Project>
-      <Name>AgileRepositoryWeb.IRepository</Name>
+    <ProjectReference Include="..\AgileRepositoryWebTest.IRepository\AgileRepositoryWebTest.IRepository.csproj">
+      <Project>{A7AF24A2-DBD3-45A8-B58E-8F3C4CB90D22}</Project>
+      <Name>AgileRepositoryWebTest.IRepository</Name>
     </ProjectReference>
     <ProjectReference Include="..\AgileRepository\Agile.Repository.csproj">
       <Project>{89ac3035-0101-4c5c-9a84-670f3268d3c1}</Project>

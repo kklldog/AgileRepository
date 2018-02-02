@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{9473E8F8-2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgileRepositoryWebTest", "AgileRepositoryWebTest\AgileRepositoryWebTest.csproj", "{5542982D-37B2-4416-AA5B-8AEFC2B01B7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgileRepositoryWeb.IRepository", "AgileRepositoryWeb.IRepository\AgileRepositoryWeb.IRepository.csproj", "{A7AF24A2-DBD3-45A8-B58E-8F3C4CB90D22}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgileRepositoryWebTest.IRepository", "AgileRepositoryWebTest.IRepository\AgileRepositoryWebTest.IRepository.csproj", "{A7AF24A2-DBD3-45A8-B58E-8F3C4CB90D22}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

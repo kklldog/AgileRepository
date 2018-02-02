@@ -10,11 +10,11 @@ using DapperExtensions.Sql;
 
 namespace Agile.Repository.Sql
 {
-    public class SqlserverBuilder : SqlBuilder
+    public class OracleBuilder : SqlBuilder
     {
         private ISqlGenerator _sqlGenerator;
 
-        public override string QueryParamSyntaxMark => "@";
+        public override string QueryParamSyntaxMark => ":";
 
         public override ISqlGenerator SqlGenerator
         {
@@ -22,13 +22,14 @@ namespace Agile.Repository.Sql
             {
                 if (_sqlGenerator == null)
                 {
-                    var config = new DapperExtensionsConfiguration(typeof(AutoClassMapper<>), new List<Assembly>(), new SqlServerDialect());
+                    var config = new DapperExtensionsConfiguration(typeof(AutoClassMapper<>), new List<Assembly>(), new OracleDialect());
                     _sqlGenerator = new SqlGeneratorImpl(config);
                 }
 
                 return _sqlGenerator;
             }
         }
+
 
     }
 }

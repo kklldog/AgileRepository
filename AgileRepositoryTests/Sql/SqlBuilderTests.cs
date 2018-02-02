@@ -32,21 +32,42 @@ namespace Agile.Repository.Sql.Tests
             var where = builder.MethodNameToWhere(name);
             Assert.IsNotNull(where);
             Assert.AreEqual(where,
-                " where UserName=@UserName");
+                " UserName=@UserName");
             Console.WriteLine(where);
 
             name = "QueryByUserNameAndId";
             where = builder.MethodNameToWhere(name);
             Assert.IsNotNull(where);
             Assert.AreEqual(where,
-                " where UserName=@UserName And Id=@Id");
+                " UserName=@UserName And Id=@Id");
             Console.WriteLine(where);
 
             name = "QueryByUserNameAndIdOrNickNameAndChineseName";
             where = builder.MethodNameToWhere(name);
             Assert.IsNotNull(where);
             Assert.AreEqual(where,
-                " where UserName=@UserName And Id=@Id Or NickName=@NickName And ChineseName=@ChineseName");
+                " UserName=@UserName And Id=@Id Or NickName=@NickName And ChineseName=@ChineseName");
+            Console.WriteLine(where);
+
+            name = "QueryByUserNameAndIdOrNickNameAndChineseNameAndSexIsNullOrAgeIsNotNull";
+            where = builder.MethodNameToWhere(name);
+            Assert.IsNotNull(where);
+            Assert.AreEqual(where,
+                " UserName=@UserName And Id=@Id Or NickName=@NickName And ChineseName=@ChineseName And Sex Is Null Or Age Is Not Null");
+            Console.WriteLine(where);
+
+            name = "CountByUserName";
+            where = builder.MethodNameToWhere(name);
+            Assert.IsNotNull(where);
+            Assert.AreEqual(where,
+                " UserName=@UserName");
+            Console.WriteLine(where);
+
+            name = "CountByUserNameAndId";
+            where = builder.MethodNameToWhere(name);
+            Assert.IsNotNull(where);
+            Assert.AreEqual(where,
+                " UserName=@UserName And Id=@Id");
             Console.WriteLine(where);
         }
     }

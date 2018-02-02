@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Agile.Repository;
+using Agile.Repository.Attributes;
 using Agile.Repository.Proxy;
 
-namespace AgileRepositoryWeb.IRepository
+namespace AgileRepositoryWebTest.IRepository
 {
     public class Users
     {
@@ -19,7 +20,7 @@ namespace AgileRepositoryWeb.IRepository
 
     public interface IUserRepository : IAgileRepository
     {
-        [AutoSql(Sql = "select * from [users] where userName = @userName")]
+        [QueryBySql( "select * from [users] where userName = @userName")]
         IEnumerable<Users> QueryBySql(string userName);
     }
 }

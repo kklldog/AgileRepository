@@ -11,15 +11,34 @@ namespace Agile.Repository.Proxy
     {
         private readonly List<Type> _agileRepositories = new List<Type>();
         private readonly ConcurrentDictionary<Type, IAgileRepository> _proxyInsteances = new ConcurrentDictionary<Type, IAgileRepository>();
+        protected IProxyGenerator ProxyGenerator = null;
 
-        public void Init(AgileRepositoryConfig config)
+        public InterfaceProxy()
+        {
+            var proxyGeneratorBuilder = new ProxyGeneratorBuilder();
+            ProxyGenerator = proxyGeneratorBuilder.Build();
+        }
+
+        public void Init(string[] assemblyNames)
         {
             _agileRepositories.Clear();
             _proxyInsteances.Clear();
 
-            var assemblies = config == null
-                ? AppDomain.CurrentDomain.GetAssemblies()
-                : new Assembly[] { Assembly.Load(config.AssbemlyName) };
+            Assembly[] assemblies = null;
+            if (assemblyNames == null)
+            {
+                assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            }
+            else
+            {
+                var ass = new List<Assembly>();
+                assemblyNames.ToList().ForEach(a =>
+                {
+                    ass.Add(Assembly.Load(a));
+                });
+
+                assemblies = ass.ToArray();
+            }
 
             foreach (var ass in assemblies)
             {
@@ -58,9 +77,7 @@ namespace Agile.Repository.Proxy
 
         public T CreateProxyInstance<T>() where T : class, IAgileRepository
         {
-            var proxyGeneratorBuilder = new ProxyGeneratorBuilder();
-            IProxyGenerator proxyGenerator = proxyGeneratorBuilder.Build();
-            var proxyInstance = proxyGenerator.CreateInterfaceProxy<T>();
+            var proxyInstance = ProxyGenerator.CreateInterfaceProxy<T>();
 
             return proxyInstance;
         }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Agile.Repository;
-using AgileRepositoryWeb.IRepository;
+using AgileRepositoryWebTest.IRepository;
 using Agile.Repository.Proxy;
 
 namespace AgileRepositoryWebTest.Controllers

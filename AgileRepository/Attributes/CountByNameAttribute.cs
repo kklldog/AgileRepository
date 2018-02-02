@@ -11,18 +11,15 @@ using Agile.Repository.Utils;
 using AspectCore.DynamicProxy;
 using AspectCore.DynamicProxy.Parameters;
 
-namespace Agile.Repository
+namespace Agile.Repository.Attributes
 {
-    public class AutoSqlAttribute : AbstractInterceptorAttribute
+    public class CountByNameAttribute : AbstractInterceptorAttribute
     {
-        public string Sql { get; set; }
-
         public string ConnectionName { get; set; }
 
         public override Task Invoke(AspectContext context, AspectDelegate next)
         {
-            var querySql = "";
-            querySql = !string.IsNullOrEmpty(Sql) ? Sql : GenericSqlByMethodName(context, next);
+            var sql = GenericSqlByMethodName(context, next);
 
             var paramters = context.GetParameters();
             var queryParams = new Dictionary<string, object>();
@@ -32,7 +29,7 @@ namespace Agile.Repository
             }
             using (var conn = ConnectionFactory.CreateConnection(ConnectionName))
             {
-                var result = QueryHelper.RunGenericQuery(context, conn, querySql, queryParams);
+                var result = QueryHelper.RunGenericCount(context, conn, sql, queryParams);
                 context.ReturnValue = result;
             }
 
@@ -46,11 +43,9 @@ namespace Agile.Repository
                 : ConnectionConfig.GetProviderName(ConnectionName);
             var builder = SqlBuilderSelecter.Get(provider);
 
-            var select = GenericCallHelper.RunGenericMethod(builder.GetType(), "Select",
-                context.ProxyMethod.ReturnType.GenericTypeArguments, builder, new object[] { });
-            var where = builder.MethodNameToWhere(context.ProxyMethod.Name);
-
-            var sql = (string)select + where;
+            var gt = context.ProxyMethod.GetGenericArguments();
+            var sql = (string)GenericCallHelper.RunGenericMethod(builder.GetType(), "MethodNameToSql", gt, builder,
+                new object[] { context.ProxyMethod.Name });
 
             return sql;
         }

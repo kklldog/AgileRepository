@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Agile.Repository.Data;
+using Agile.Repository.Utils;
 using DapperExtensions;
 using DapperExtensions.Mapper;
 using DapperExtensions.Sql;
@@ -17,35 +18,143 @@ namespace Agile.Repository.Sql
         string QueryParamSyntaxMark { get; }
         ISqlGenerator SqlGenerator { get; }
         string Select<T>() where T : class;
+        string Count<T>() where T : class;
+        string Insert<T>() where T : class;
+        string Update<T>() where T : class;
+        string Delete<T>() where T : class;
         string MethodNameToWhere(string methodName);
-        string MethodNameToSql(string methodName);
+        string MethodNameToSql<T>(string methodName) where T : class;
+    }
+
+    public class SqlInnerKey
+    {
+        public string Name { get; set; }
+
+        public string SqlString { get; set; }
+
+    }
+
+    public class MethodPrefixsKey
+    {
+        public string Name { get; set; }
+
+        public string GeneratorMethod { get; set; }
+
+        public bool NeedWhere { get; set; }
+
     }
 
     public abstract class SqlBuilder : ISqlBuilder
     {
-        protected readonly List<string> MethodPrefixs;
+        protected readonly List<MethodPrefixsKey> MethodPrefixs;
         protected readonly List<string> OpKeys;
+        protected readonly List<SqlInnerKey> InnerKeys;
+
+        protected readonly ConcurrentDictionary<string, string> SqlCacheDict;
 
         protected SqlBuilder()
         {
-            MethodPrefixs = new List<string>()
+            SqlCacheDict = new ConcurrentDictionary<string, string>();
+
+            MethodPrefixs = new List<MethodPrefixsKey>()
             {
-                "QueryBy"
+               new MethodPrefixsKey()
+               {
+                   Name =  "QueryBy",
+                   GeneratorMethod = "Select",
+                   NeedWhere = true
+               },
+                new MethodPrefixsKey()
+                {
+                    Name =  "CountBy",
+                    GeneratorMethod = "Count",
+                    NeedWhere = true
+                }
+                ,
+                new MethodPrefixsKey()
+                {
+                    Name =  "Update",
+                    GeneratorMethod = "Update"
+                }
+                ,
+                new MethodPrefixsKey()
+                {
+                    Name =  "Insert",
+                    GeneratorMethod = "Insert"
+                }
+                ,
+                new MethodPrefixsKey()
+                {
+                    Name =  "Delete",
+                    GeneratorMethod = "Delete"
+                },
+                new MethodPrefixsKey()
+                {
+                    Name =  "DeleteBy",
+                    GeneratorMethod = "Delete",
+                    NeedWhere = true
+                }
             };
 
             OpKeys = new List<string>()
             {
                 "And","Or"
             };
+
+            InnerKeys = new List<SqlInnerKey>()
+            {
+                new SqlInnerKey()
+                {
+                    Name = "IsNull",
+                    SqlString = "Is Null"
+                },
+                new SqlInnerKey()
+                {
+                    Name = "IsNotNull",
+                    SqlString = "Is Not Null"
+                }
+            };
         }
 
         public abstract string QueryParamSyntaxMark { get; }
         public abstract ISqlGenerator SqlGenerator { get; }
 
-        public string Select<T>() where T : class
+        public virtual string Select<T>() where T : class
         {
             var map = SqlGenerator.Configuration.GetMap<T>();
             var sql = SqlGenerator.Select(map, null, null, new Dictionary<string, object>());
+
+            return sql;
+        }
+
+        public string Count<T>() where T : class
+        {
+            var map = SqlGenerator.Configuration.GetMap<T>();
+            var sql = SqlGenerator.Count(map, null, null);
+
+            return sql;
+        }
+
+        public string Insert<T>() where T : class
+        {
+            var map = SqlGenerator.Configuration.GetMap<T>();
+            var sql = SqlGenerator.Insert(map);
+
+            return sql;
+        }
+
+        public string Update<T>() where T : class
+        {
+            var map = SqlGenerator.Configuration.GetMap<T>();
+            var sql = SqlGenerator.Update(map, null, null, true);
+
+            return sql;
+        }
+
+        public string Delete<T>() where T : class
+        {
+            var map = SqlGenerator.Configuration.GetMap<T>();
+            var sql = SqlGenerator.Delete(map, null, null);
 
             return sql;
         }
@@ -104,7 +213,7 @@ namespace Agile.Repository.Sql
 
         protected string BuildWhere(Queue<string> queryParams)
         {
-            var where = new StringBuilder(" where");
+            var where = new StringBuilder("");
             while (queryParams.Count > 0)
             {
                 var param = queryParams.Dequeue();
@@ -115,14 +224,34 @@ namespace Agile.Repository.Sql
                 }
                 else
                 {
-                    where.AppendFormat(" {0}={1}{0}", param, QueryParamSyntaxMark);
+                    SqlInnerKey innerKey = null;
+                    foreach (var sqlInnerKey in InnerKeys)
+                    {
+                        if (param.Contains(sqlInnerKey.Name))
+                        {
+                            innerKey = sqlInnerKey;
+                            break;
+                        }
+                    }
+                    if (innerKey != null)
+                    {
+                        //username is null ...
+                        param = param.Replace(innerKey.Name, "");
+                        where.AppendFormat(" {0} {1}", param, innerKey.SqlString);
+                    }
+                    else
+                    {
+                        //username=@username
+                        where.AppendFormat(" {0}={1}{0}", param, QueryParamSyntaxMark);
+                    }
+
                 }
             }
 
             return where.ToString();
         }
 
-        public string MethodNameToWhere(string methodName)
+        public virtual string MethodNameToWhere(string methodName)
         {
             //QueryByUserNameAndIdOrNickNameAndChineseName
             if (string.IsNullOrEmpty(methodName))
@@ -131,13 +260,13 @@ namespace Agile.Repository.Sql
             }
             var methodNameCopy = methodName;
 
-            string queryPreix = "";
+            MethodPrefixsKey methodPreix = null;
             foreach (var prefix in MethodPrefixs)
             {
-                queryPreix = prefix;
-                if (methodNameCopy.StartsWith(queryPreix))
+                methodPreix = prefix;
+                if (methodNameCopy.StartsWith(prefix.Name))
                 {
-                    methodNameCopy = methodNameCopy.Replace(prefix, "");
+                    methodNameCopy = methodNameCopy.Replace(prefix.Name, "");
                     break;
                 }
             }
@@ -149,7 +278,49 @@ namespace Agile.Repository.Sql
             return where;
         }
 
-        public abstract string MethodNameToSql(string methodName);
+        public virtual string MethodNameToSql<T>(string methodName) where T : class
+        {
+            if (string.IsNullOrEmpty(methodName))
+            {
+                throw new ArgumentNullException(nameof(methodName));
+            }
+
+            string sql = "";
+            var cacheKey = $"{typeof(T)}_{methodName}";
+            var hit = SqlCacheDict.TryGetValue(cacheKey, out sql);
+            if (hit)
+            {
+                return sql;
+            }
+
+            MethodPrefixsKey methodPreix = null;
+            foreach (var prefix in MethodPrefixs)
+            {
+                methodPreix = prefix;
+                if (methodName.StartsWith(prefix.Name))
+                {
+                    break;
+                }
+            }
+
+            if (methodPreix == null)
+            {
+                throw new Exception(string.Format("Can not hit sql method from method name :{0}", methodName));
+            }
+
+            var select = GenericCallHelper.RunGenericMethod(this.GetType(), methodPreix.GeneratorMethod,
+                new Type[] { typeof(T) }, this, null);
+            var where = "";
+            if (methodPreix.NeedWhere)
+            {
+                where = " where " + MethodNameToWhere(methodName);
+            }
+            sql = select + where;
+
+            SqlCacheDict.TryAdd(cacheKey, sql);
+
+            return sql;
+        }
 
     }
 
@@ -173,14 +344,14 @@ namespace Agile.Repository.Sql
 
         private static ISqlBuilder CreateBuilderByProviderName(string providerName)
         {
-            if (providerName.Equals(DbProviders.Sqlserver,StringComparison.CurrentCultureIgnoreCase))
+            if (providerName.Equals(DbProviders.Sqlserver, StringComparison.CurrentCultureIgnoreCase))
             {
                 return new SqlserverBuilder();
             }
 
             if (providerName.Equals(DbProviders.Oracle, StringComparison.CurrentCultureIgnoreCase))
             {
-                return new SqlserverBuilder();
+                return new OracleBuilder();
             }
 
             return new SqlserverBuilder();
