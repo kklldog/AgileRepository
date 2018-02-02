@@ -65,7 +65,7 @@
     <Compile Include="Attributes\QueryByNameAttribute.cs" />
     <Compile Include="Attributes\CountBySqlAttribute.cs" />
     <Compile Include="Data\DbProviders.cs" />
-    <Compile Include="Proxy\IAgileRepository.cs" />
+    <Compile Include="Proxy\AgileRepositoryAttribute.cs" />
     <Compile Include="Data\ConnectionConfig.cs" />
     <Compile Include="Data\ConnectionFactory.cs" />
     <Compile Include="Data\DapperRepository.cs" />

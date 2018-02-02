@@ -18,12 +18,8 @@ namespace AgileRepositoryWebTest
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            AgileRepository.Register(new AgileRepositoryConfig()
+            AgileRepository.SetConfig(new AgileRepositoryConfig()
             {
-                AssbemlyNames = new string[]
-               {
-                   "AgileRepositoryWebTest.IRepository"
-               }
             });
         }
     }

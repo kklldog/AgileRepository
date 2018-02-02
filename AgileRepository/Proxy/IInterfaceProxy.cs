@@ -9,12 +9,9 @@ namespace Agile.Repository.Proxy
 {
     public interface IInterfaceProxy
     {
-        T CreateProxyInstance<T>() where T : class, IAgileRepository;
+        T CreateProxyInstance<T>() where T : class;
 
-        void Init(string[] assembliyNames);
+        T GetInstance<T>() where T : class;
 
-        T GetInstance<T>() where T : class, IAgileRepository;
-
-        TRt Invoke<T, TRt>(string method, params object[] args) where T : class, IAgileRepository;
     }
 }

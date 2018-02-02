@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Agile.Repository.Data;
+using Agile.Repository.Proxy;
 using Agile.Repository.Sql;
 using Agile.Repository.Utils;
 using AspectCore.DynamicProxy;
@@ -39,7 +40,11 @@ namespace Agile.Repository.Attributes
             }
             using (var conn = ConnectionFactory.CreateConnection(ConnectionName))
             {
-                var result = QueryHelper.RunGenericQuery(context, conn, Sql, queryParams);
+                var gt = context.ServiceMethod.DeclaringType.GetInterfaces()
+                    .First(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IAgileRepository<>))
+                    .GenericTypeArguments;
+                //get IAgileRepository<TEntity> 's TEntity for Query T
+                var result = QueryHelper.RunGenericQuery(gt[0], conn, Sql, queryParams);
                 context.ReturnValue = result;
             }
 

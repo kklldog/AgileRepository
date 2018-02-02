@@ -8,7 +8,7 @@ namespace Agile.Repository
 {
     public class AgileRepositoryConfig
     {
-        public string[] AssbemlyNames { get; set; }
+//        public string[] AssbemlyNames { get; set; }
 
         public Action<string,object> SqlMonitor { get; set; }
     }

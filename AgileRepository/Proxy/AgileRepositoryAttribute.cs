@@ -6,8 +6,13 @@ using System.Threading.Tasks;
 
 namespace Agile.Repository.Proxy
 {
-    public interface IAgileRepository
+    public class AgileRepositoryAttribute : Attribute
     {
 
+    }
+
+    public interface IAgileRepository<TEntity> where TEntity:class 
+    {
+        
     }
 }

@@ -130,7 +130,7 @@ namespace Agile.Repository.Sql
         public string Count<T>() where T : class
         {
             var map = SqlGenerator.Configuration.GetMap<T>();
-            var sql = SqlGenerator.Count(map, null, null);
+            var sql = SqlGenerator.Count(map, null, new Dictionary<string, object>());
 
             return sql;
         }
@@ -146,7 +146,7 @@ namespace Agile.Repository.Sql
         public string Update<T>() where T : class
         {
             var map = SqlGenerator.Configuration.GetMap<T>();
-            var sql = SqlGenerator.Update(map, null, null, true);
+            var sql = SqlGenerator.Update(map, null, new Dictionary<string, object>(), true);
 
             return sql;
         }
@@ -154,7 +154,7 @@ namespace Agile.Repository.Sql
         public string Delete<T>() where T : class
         {
             var map = SqlGenerator.Configuration.GetMap<T>();
-            var sql = SqlGenerator.Delete(map, null, null);
+            var sql = SqlGenerator.Delete(map, null, new Dictionary<string, object>());
 
             return sql;
         }

@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Agile.Repository.Data;
+using Agile.Repository.Proxy;
 using Agile.Repository.Sql;
 using Agile.Repository.Utils;
 using AspectCore.DynamicProxy;
@@ -29,7 +30,7 @@ namespace Agile.Repository.Attributes
             }
             using (var conn = ConnectionFactory.CreateConnection(ConnectionName))
             {
-                var result = QueryHelper.RunGenericCount(context, conn, sql, queryParams);
+                var result = QueryHelper.RunGenericCount(context.ServiceMethod.ReturnType, conn, sql, queryParams);
                 context.ReturnValue = result;
             }
 
@@ -43,7 +44,9 @@ namespace Agile.Repository.Attributes
                 : ConnectionConfig.GetProviderName(ConnectionName);
             var builder = SqlBuilderSelecter.Get(provider);
 
-            var gt = context.ProxyMethod.GetGenericArguments();
+            var gt = context.ServiceMethod.DeclaringType.GetInterfaces()
+                .First(i => i.IsGenericType && i.GetGenericTypeDefinition()==typeof(IAgileRepository<>))
+                .GenericTypeArguments;
             var sql = (string)GenericCallHelper.RunGenericMethod(builder.GetType(), "MethodNameToSql", gt, builder,
                 new object[] { context.ProxyMethod.Name });
 

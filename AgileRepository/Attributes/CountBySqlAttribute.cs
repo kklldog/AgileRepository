@@ -39,7 +39,7 @@ namespace Agile.Repository.Attributes
             }
             using (var conn = ConnectionFactory.CreateConnection(ConnectionName))
             {
-                var result = QueryHelper.RunGenericCount(context, conn, Sql, queryParams);
+                var result = QueryHelper.RunGenericCount(context.ServiceMethod.ReturnType, conn, Sql, queryParams);
                 context.ReturnValue = result;
             }
 

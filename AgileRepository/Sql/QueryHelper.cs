@@ -20,7 +20,7 @@ namespace Agile.Repository.Sql
         private static MethodInfo _countMethod;
         private static readonly object _lock = new object();
 
-        public static object RunGenericQuery(AspectContext context, IDbConnection conn, string sql, object paramters)
+        public static object RunGenericQuery(Type returnType, IDbConnection conn, string sql, object paramters)
         {
             if (_queryMethod == null)
             {
@@ -29,7 +29,7 @@ namespace Agile.Repository.Sql
                     if (_queryMethod == null)
                     {
                         _queryMethod = GenericCallHelper.GetGenericMethod(typeof(QueryHelper), "Query",
-                            context.ProxyMethod.ReturnType.GenericTypeArguments);
+                            new Type[]{returnType});
                     }
                 }
             }
@@ -40,7 +40,7 @@ namespace Agile.Repository.Sql
             });
         }
 
-        public static object RunGenericCount(AspectContext context, IDbConnection conn, string sql, object paramters)
+        public static object RunGenericCount(Type returnType, IDbConnection conn, string sql, object paramters)
         {
             if (_countMethod == null)
             {
@@ -49,7 +49,7 @@ namespace Agile.Repository.Sql
                     if (_countMethod == null)
                     {
                         _countMethod = GenericCallHelper.GetGenericMethod(typeof(QueryHelper), "Count",
-                            new Type[]{ context.ProxyMethod.ReturnType });
+                            new Type[]{ returnType });
                     }
                 }
             }
