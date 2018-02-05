@@ -6,15 +6,18 @@ using System.Web.Mvc;
 using Agile.Repository;
 using AgileRepositoryWebTest.IRepository;
 using Agile.Repository.Proxy;
+using Autofac;
 
 namespace AgileRepositoryWebTest.Controllers
 {
     public class HomeController : Controller
     {
+        protected IUserRepository UserRepository;
+
         public ActionResult Index()
         {
-            IUserRepository repository = AgileRepository.Proxy.GetInstance<IUserRepository>();
-            var users = repository.QueryBySql("admin");
+            IUserRepository repository = Autofac.Container.Resolve<IUserRepository>();
+            var users = repository.QueryByUserName("admin");
 
             return Json(users, JsonRequestBehavior.AllowGet);
         }

@@ -58,6 +58,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\AspectCore.Extensions.Reflection.0.2.4\lib\net45\AspectCore.Extensions.Reflection.dll</HintPath>
     </Reference>
+    <Reference Include="Autofac">
+      <HintPath>..\packages\Autofac.4.0.1\lib\net45\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.7\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
@@ -157,6 +160,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Autofac.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -219,6 +223,10 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Agile.Repository.Autofac\Agile.Repository.Autofac.csproj">
+      <Project>{4272780f-578c-4046-bcae-8a8c5603f708}</Project>
+      <Name>Agile.Repository.Autofac</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AgileRepositoryWebTest.IRepository\AgileRepositoryWebTest.IRepository.csproj">
       <Project>{A7AF24A2-DBD3-45A8-B58E-8F3C4CB90D22}</Project>
       <Name>AgileRepositoryWebTest.IRepository</Name>

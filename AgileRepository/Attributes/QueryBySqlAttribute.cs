@@ -34,9 +34,7 @@ namespace Agile.Repository.Attributes
             var queryParams = ToParamterDict(paramters);
             using (var conn = ConnectionFactory.CreateConnection(ConnectionName))
             {
-                var gt = context.ServiceMethod.DeclaringType.GetInterfaces()
-                    .First(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IAgileRepository<>))
-                    .GenericTypeArguments;
+                var gt = AgileRepositoryGenericTypeArguments(context);
                 //get IAgileRepository<TEntity> 's TEntity for Query T
                 var result = QueryHelper.RunGenericQuery(gt[0], conn, Sql, queryParams);
                 context.ReturnValue = result;

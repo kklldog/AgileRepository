@@ -24,7 +24,8 @@ namespace Agile.Repository.Attributes
             var queryParams = ToParamterDict(paramters);
             using (var conn = ConnectionFactory.CreateConnection(ConnectionName))
             {
-                var result = QueryHelper.RunGenericQuery(context.ServiceMethod.ReturnType, conn, sql, queryParams);
+                var gt = AgileRepositoryGenericTypeArguments(context);
+                var result = QueryHelper.RunGenericQuery(gt.First(), conn, sql, queryParams);
                 context.ReturnValue = result;
             }
 
@@ -38,9 +39,7 @@ namespace Agile.Repository.Attributes
                 : ConnectionConfig.GetProviderName(ConnectionName);
             var builder = SqlBuilderSelecter.Get(provider);
 
-            var gt = context.ServiceMethod.DeclaringType.GetInterfaces()
-                .First(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IAgileRepository<>))
-                .GenericTypeArguments;
+            var gt = AgileRepositoryGenericTypeArguments(context);
             //get IAgileRepository<TEntity> 's TEntity for MethodNameToSql's T
             var sql = (string)GenericCallHelper.RunGenericMethod(builder.GetType(), "MethodNameToSql", gt, builder,
                 new object[] { context.ProxyMethod.Name });

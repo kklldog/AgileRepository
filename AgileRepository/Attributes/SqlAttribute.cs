@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Agile.Repository.Proxy;
 using AspectCore.DynamicProxy;
 using AspectCore.DynamicProxy.Parameters;
 
@@ -23,6 +24,15 @@ namespace Agile.Repository.Attributes
             }
 
             return queryParams;
+        }
+
+        protected Type[] AgileRepositoryGenericTypeArguments(AspectContext context)
+        {
+            var gt = context.ServiceMethod.DeclaringType.GetInterfaces()
+                .First(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IAgileRepository<>))
+                .GenericTypeArguments;
+
+            return gt;
         }
     }
 }

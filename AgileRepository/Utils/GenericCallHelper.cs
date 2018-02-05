@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Agile.Repository.Utils
 {
-    class GenericCallHelper
+    public class GenericCallHelper
     {
         public static object RunGenericMethod(Type type, string method, Type[] genericTypeArguments, object instance, object[] paramters)
         {

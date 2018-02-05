@@ -44,10 +44,7 @@ namespace Agile.Repository.Attributes
                 ? DbProviders.Sqlserver
                 : ConnectionConfig.GetProviderName(ConnectionName);
             var builder = SqlBuilderSelecter.Get(provider);
-            var gt = context.ServiceMethod.DeclaringType.GetInterfaces()
-                .First(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IAgileRepository<>))
-                .GenericTypeArguments;
-
+            var gt = AgileRepositoryGenericTypeArguments(context);
             var sql = (string)GenericCallHelper.RunGenericMethod(builder.GetType(), "UpdateById", gt, builder,
                 new object[] {});
 

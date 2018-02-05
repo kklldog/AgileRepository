@@ -18,9 +18,10 @@ namespace AgileRepositoryWebTest.IRepository
         public string Password { get; set; }
     }
 
-    public interface IUserRepository
+    public interface IUserRepository:IAgileRepository<Users>
     {
-        [QueryBySql( "select * from [users] where userName = @userName")]
-        IEnumerable<Users> QueryBySql(string userName);
+        [QueryByMethodName]
+        IEnumerable<Users> QueryByUserName(string userName);
+
     }
 }

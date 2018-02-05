@@ -44,7 +44,13 @@ namespace Agile.Repository.Proxy
 
         public Type GetProxyType<T>() where T : class
         {
-            return ProxyGenerator.TypeGenerator.CreateInterfaceProxyType(typeof(T));
+            return GetProxyType(typeof(T));
+        }
+
+
+        public Type GetProxyType(Type type)
+        {
+            return ProxyGenerator.TypeGenerator.CreateInterfaceProxyType(type);
         }
     }
 }
