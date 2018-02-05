@@ -11,7 +11,9 @@ namespace Agile.Repository.Proxy
     {
         T CreateProxyInstance<T>() where T : class;
 
-        T GetInstance<T>() where T : class;
+        T SingletonInstance<T>() where T : class;
+
+        Type GetProxyType<T>() where T : class;
 
     }
 }

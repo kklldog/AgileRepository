@@ -25,7 +25,7 @@ namespace Agile.Repository.Proxy
             return proxyInstance;
         }
 
-        public T GetInstance<T>() where T : class
+        public T SingletonInstance<T>() where T : class
         {
             object instance = null;
             var type = typeof(T);
@@ -40,6 +40,11 @@ namespace Agile.Repository.Proxy
             _proxyInsteances.TryAdd(type, proxyInstance);
 
             return proxyInstance;
+        }
+
+        public Type GetProxyType<T>() where T : class
+        {
+            return ProxyGenerator.TypeGenerator.CreateInterfaceProxyType(typeof(T));
         }
     }
 }
