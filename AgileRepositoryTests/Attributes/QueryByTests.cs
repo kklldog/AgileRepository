@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using AgileRepository.Proxy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +8,9 @@ using Agile.Repository;
 using Agile.Repository.Attributes;
 using Agile.Repository.Proxy;
 using Agile.Repository.Sql;
-using AgileRepositoryTests.Proxy;
-using AspectCore.DynamicProxy;
 
-namespace AgileRepository.Proxy.Tests
+namespace AgileRepositoryTests.Attributes
 {
-    
-
     [TestClass()]
     public class QueryByTests
     {
@@ -30,18 +25,6 @@ namespace AgileRepository.Proxy.Tests
                     Console.WriteLine(sql);
                 }
             });
-        }
-
-        [TestMethod()]
-        public void CreateProxyInstanceTest()
-        {
-            var instance = Proxy.CreateProxyInstance<ITestInterface>();
-            Assert.IsNotNull(instance);
-            Console.WriteLine(instance.GetType());
-            var instance1 = Proxy.CreateProxyInstance<ITestInterface>();
-            Assert.IsNotNull(instance);
-            Console.WriteLine(instance1.GetType());
-            Assert.AreNotSame(instance, instance1);
         }
 
         [TestMethod()]
@@ -127,18 +110,6 @@ namespace AgileRepository.Proxy.Tests
                 Console.WriteLine("id:{0} name:{1}", user.Id, user.UserName);
             }
         }
-
-       
-        [TestMethod()]
-        public void GetInstanceTest()
-        {
-            var instance = Proxy.GetInstance<ITestInterface>();
-            Assert.IsNotNull(instance);
-            Console.WriteLine(instance.GetType());
-            var instance1 = Proxy.GetInstance<ITestInterface>();
-            Assert.IsNotNull(instance1);
-            Console.WriteLine(instance1.GetType());
-            Assert.AreSame(instance, instance1);
-        }
+     
     }
 }

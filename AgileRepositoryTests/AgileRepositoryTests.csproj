@@ -69,10 +69,10 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Proxy\TestInterface.cs" />
-    <Compile Include="Proxy\Users.cs" />
-    <Compile Include="Proxy\CountByTests.cs" />
-    <Compile Include="Proxy\QueryByTests.cs" />
+    <Compile Include="Proxy\InterfaceProxyTests.cs" />
+    <Compile Include="Attributes\TestInterface.cs" />
+    <Compile Include="Attributes\CountByTests.cs" />
+    <Compile Include="Attributes\QueryByTests.cs" />
     <Compile Include="Sql\SqlBuilderTests.cs" />
   </ItemGroup>
   <ItemGroup>

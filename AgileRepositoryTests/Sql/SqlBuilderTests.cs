@@ -1,15 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
 using Agile.Repository.Sql;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AgileRepository.Proxy.Tests;
-using AgileRepositoryTests.Proxy;
+using AgileRepositoryTests.Attributes;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Agile.Repository.Sql.Tests
+namespace AgileRepositoryTests.Sql
 {
+    public class Users
+    {
+        public string Id { get; set; }
+
+        public string UserName { get; set; }
+    }
+
     [TestClass()]
     public class SqlBuilderTests
     {

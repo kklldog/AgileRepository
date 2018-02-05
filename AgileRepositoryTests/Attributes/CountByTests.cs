@@ -1,18 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using AgileRepository.Proxy;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using Agile.Repository;
-using Agile.Repository.Attributes;
 using Agile.Repository.Proxy;
-using Agile.Repository.Sql;
-using AgileRepositoryTests.Proxy;
-using AspectCore.DynamicProxy;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace AgileRepository.Proxy.Tests
+namespace AgileRepositoryTests.Attributes
 {
     [TestClass()]
     public class CountByTests

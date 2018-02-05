@@ -1,13 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Agile.Repository.Attributes;
 using Agile.Repository.Proxy;
 
-namespace AgileRepositoryTests.Proxy
+namespace AgileRepositoryTests.Attributes
 {
+    public class Users
+    {
+        public string Id { get; set; }
+
+        public string UserName { get; set; }
+    }
     public interface ITestInterface:IAgileRepository<Users>
     {
         string Test(string p1);
