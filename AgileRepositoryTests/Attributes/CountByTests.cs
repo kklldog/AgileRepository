@@ -14,7 +14,7 @@ namespace AgileRepositoryTests.Attributes
             Proxy = Agile.Repository.AgileRepository.Proxy;
             Agile.Repository.AgileRepository.SetConfig(new AgileRepositoryConfig()
             {
-                SqlMonitor = (sql, sender) =>
+                SqlMonitor = (sql, paramters ) =>
                 {
                     Console.WriteLine(sql);
                 }

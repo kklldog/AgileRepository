@@ -14,20 +14,14 @@ using AspectCore.DynamicProxy.Parameters;
 
 namespace Agile.Repository.Attributes
 {
-    public class QueryByNameAttribute : AbstractInterceptorAttribute
+    public class QueryByMethodNameAttribute : SqlAttribute
     {
-        public string ConnectionName { get; set; }
-
         public override Task Invoke(AspectContext context, AspectDelegate next)
         {
             var sql = GenericSqlByMethodName(context, next);
 
             var paramters = context.GetParameters();
-            var queryParams = new Dictionary<string, object>();
-            foreach (var parameter in paramters)
-            {
-                queryParams.Add(parameter.Name, parameter.Value);
-            }
+            var queryParams = ToParamterDict(paramters);
             using (var conn = ConnectionFactory.CreateConnection(ConnectionName))
             {
                 var result = QueryHelper.RunGenericQuery(context.ServiceMethod.ReturnType, conn, sql, queryParams);

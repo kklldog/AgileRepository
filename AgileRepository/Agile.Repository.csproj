@@ -7,7 +7,7 @@
     <ProjectGuid>{89AC3035-0101-4C5C-9A84-670F3268D3C1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AgileRepository</RootNamespace>
+    <RootNamespace>Agile.Repository</RootNamespace>
     <AssemblyName>AgileRepository</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -61,9 +61,15 @@
   <ItemGroup>
     <Compile Include="AgileRepository.cs" />
     <Compile Include="AgileRepositoryConfig.cs" />
-    <Compile Include="Attributes\CountByNameAttribute.cs" />
-    <Compile Include="Attributes\QueryByNameAttribute.cs" />
+    <Compile Include="Attributes\CountByMethodNameAttribute.cs" />
+    <Compile Include="Attributes\DeleteByMethodNameAttribute.cs" />
+    <Compile Include="Attributes\DeleteAttribute.cs" />
+    <Compile Include="Attributes\SqlAttribute.cs" />
+    <Compile Include="Attributes\UpdateAttribute.cs" />
+    <Compile Include="Attributes\InsertAttribute.cs" />
+    <Compile Include="Attributes\QueryByMethodNameAttribute.cs" />
     <Compile Include="Attributes\CountBySqlAttribute.cs" />
+    <Compile Include="Attributes\ExecuteBySqlAttribute.cs" />
     <Compile Include="Data\DbProviders.cs" />
     <Compile Include="Proxy\AgileRepositoryAttribute.cs" />
     <Compile Include="Data\ConnectionConfig.cs" />

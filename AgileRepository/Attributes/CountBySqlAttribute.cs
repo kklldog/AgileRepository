@@ -13,11 +13,9 @@ using AspectCore.DynamicProxy.Parameters;
 
 namespace Agile.Repository.Attributes
 {
-    public class CountBySqlAttribute : AbstractInterceptorAttribute
+    public class CountBySqlAttribute : SqlAttribute
     {
         public string Sql { get; set; }
-
-        public string ConnectionName { get; set; }
 
         public CountBySqlAttribute(string sql)
         {
@@ -32,11 +30,7 @@ namespace Agile.Repository.Attributes
             }
 
             var paramters = context.GetParameters();
-            var queryParams = new Dictionary<string, object>();
-            foreach (var parameter in paramters)
-            {
-                queryParams.Add(parameter.Name, parameter.Value);
-            }
+            var queryParams = ToParamterDict(paramters);
             using (var conn = ConnectionFactory.CreateConnection(ConnectionName))
             {
                 var result = QueryHelper.RunGenericCount(context.ServiceMethod.ReturnType, conn, Sql, queryParams);

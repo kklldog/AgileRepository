@@ -14,11 +14,11 @@ using AspectCore.DynamicProxy.Parameters;
 
 namespace Agile.Repository.Attributes
 {
-    public class QueryBySqlAttribute : SqlAttribute
+    public class ExecuteBySqlAttribute : SqlAttribute
     {
         public string Sql { get; set; }
 
-        public QueryBySqlAttribute(string sql)
+        public ExecuteBySqlAttribute(string sql)
         {
             Sql = sql;
         }
@@ -31,15 +31,20 @@ namespace Agile.Repository.Attributes
             }
 
             var paramters = context.GetParameters();
-            var queryParams = ToParamterDict(paramters);
+            var sqlParamters = ToParamterDict(paramters);
             using (var conn = ConnectionFactory.CreateConnection(ConnectionName))
             {
-                var gt = context.ServiceMethod.DeclaringType.GetInterfaces()
-                    .First(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IAgileRepository<>))
-                    .GenericTypeArguments;
                 //get IAgileRepository<TEntity> 's TEntity for Query T
-                var result = QueryHelper.RunGenericQuery(gt[0], conn, Sql, queryParams);
-                context.ReturnValue = result;
+                var result = (int)QueryHelper.RunExecute(conn, Sql, sqlParamters);
+                if (context.ServiceMethod.ReturnType == typeof(bool))
+                {
+                    context.ReturnValue = result > 0;
+                }
+                else
+                {
+                    context.ReturnValue = result;
+                }
+
             }
 
             return context.Break();

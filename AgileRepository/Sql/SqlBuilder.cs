@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -21,7 +22,9 @@ namespace Agile.Repository.Sql
         string Count<T>() where T : class;
         string Insert<T>() where T : class;
         string Update<T>() where T : class;
+        string UpdateById<T>() where T : class;
         string Delete<T>() where T : class;
+        string DeleteById<T>() where T : class;
         string MethodNameToWhere(string methodName);
         string MethodNameToSql<T>(string methodName) where T : class;
     }
@@ -71,23 +74,6 @@ namespace Agile.Repository.Sql
                     NeedWhere = true
                 }
                 ,
-                new MethodPrefixsKey()
-                {
-                    Name =  "Update",
-                    GeneratorMethod = "Update"
-                }
-                ,
-                new MethodPrefixsKey()
-                {
-                    Name =  "Insert",
-                    GeneratorMethod = "Insert"
-                }
-                ,
-                new MethodPrefixsKey()
-                {
-                    Name =  "Delete",
-                    GeneratorMethod = "Delete"
-                },
                 new MethodPrefixsKey()
                 {
                     Name =  "DeleteBy",
@@ -146,17 +132,45 @@ namespace Agile.Repository.Sql
         public string Update<T>() where T : class
         {
             var map = SqlGenerator.Configuration.GetMap<T>();
-            var sql = SqlGenerator.Update(map, null, new Dictionary<string, object>(), true);
+            var columns = map.Properties.Where(p => !(p.Ignored || p.IsReadOnly) && p.KeyType == KeyType.NotAKey);
+            if (!columns.Any())
+            {
+                throw new ArgumentException("No columns were mapped.");
+            }
 
-            return sql;
+            var setSql =
+                columns.Select(p => $"{SqlGenerator.GetColumnName(map, p, false)} = {QueryParamSyntaxMark}{p.Name}");
+
+            var update = $"UPDATE {SqlGenerator.GetTableName(map)} SET {setSql.AppendStrings()} ";
+
+            return update;
+        }
+
+        public string UpdateById<T>() where T : class
+        {
+            var update = Update<T>();
+            var map = SqlGenerator.Configuration.GetMap<T>();
+            var keys = map.Properties.Where(p => p.KeyType != KeyType.NotAKey);
+            var whereSql = keys.Select(k => string.Format("{0} = {1}{0}", k.Name, QueryParamSyntaxMark));
+
+            return $"{update} WHERE {whereSql.AppendStrings()}";
         }
 
         public string Delete<T>() where T : class
         {
             var map = SqlGenerator.Configuration.GetMap<T>();
-            var sql = SqlGenerator.Delete(map, null, new Dictionary<string, object>());
+            return $"DELETE FROM {SqlGenerator.GetTableName(map)}";
 
-            return sql;
+        }
+
+        public string DeleteById<T>() where T : class
+        {
+            var delete = Delete<T>();
+            var map = SqlGenerator.Configuration.GetMap<T>();
+            var keys = map.Properties.Where(p => p.KeyType != KeyType.NotAKey);
+            var whereSql = keys.Select(k => string.Format("{0} = {1}{0}", k.Name, QueryParamSyntaxMark));
+
+            return $"{delete} WHERE {whereSql.AppendStrings()}";
         }
 
         protected void SplitParams(Queue<string> queryparams, string[] opKeys, string methodName)

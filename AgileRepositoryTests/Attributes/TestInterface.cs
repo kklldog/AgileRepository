@@ -1,36 +1,52 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Agile.Repository.Attributes;
 using Agile.Repository.Proxy;
+using DapperExtensions.Mapper;
 
 namespace AgileRepositoryTests.Attributes
 {
-    public class Users
+    public class UserMapper : ClassMapper<User>
+    {
+        public UserMapper()
+        {
+            Table("Users");
+            Map(x => x.Id).Key(KeyType.Assigned);
+            AutoMap();
+        }
+    }
+    public class User
     {
         public string Id { get; set; }
 
         public string UserName { get; set; }
+
+        public string Password { get; set; }
+
+        public DateTime CreateTime { get; set; }
+
     }
-    public interface ITestInterface:IAgileRepository<Users>
+    public interface ITestInterface:IAgileRepository<User>
     {
         string Test(string p1);
 
         [QueryBySql("SELECT * FROM USERS")]
-        IEnumerable<Users> TestSql();
+        IEnumerable<User> TestSql();
 
         [QueryBySql("SELECT * FROM USERS where username=@userName")]
-        IEnumerable<Users> TestSql1(string userName);
+        IEnumerable<User> TestSql1(string userName);
 
-        [QueryByName]
-        IEnumerable<Users> QueryByUserName(string userName);
+        [QueryByMethodName]
+        IEnumerable<User> QueryByUserName(string userName);
 
-        [QueryByName]
-        IEnumerable<Users> QueryByUserNameAndId(string userName, string id);
+        [QueryByMethodName]
+        IEnumerable<User> QueryByUserNameAndId(string userName, string id);
 
-        [QueryByName]
-        IEnumerable<Users> QueryByCreaterIsNull();
+        [QueryByMethodName]
+        IEnumerable<User> QueryByCreaterIsNull();
 
-        [QueryByName]
-        IEnumerable<Users> QueryByCreaterIsNotNull();
+        [QueryByMethodName]
+        IEnumerable<User> QueryByCreaterIsNotNull();
 
         [CountBySql("Select count(*) from users")]
         int TestCount();
@@ -38,10 +54,25 @@ namespace AgileRepositoryTests.Attributes
         [CountBySql("Select count(*) from users where userName=@userName")]
         int TestCount1(string userName);
 
-        [CountByName]
+        [CountByMethodName]
         int CountByUserName(string userName);
 
-        [CountByName]
+        [CountByMethodName]
         int CountByIdAndUserName(string id, string userName);
+
+        [Insert]
+        int Insert(User user);
+
+        [Update]
+        int Update(User user);
+
+        [Delete]
+        int Delete(User user);
+
+        [DeleteByMethodName]
+        int DeleteByUserName(string userName);
+
+        [ExecuteBySql("Delete from [users] where id =@id ")]
+        int Execute(string id);
     }
 }

@@ -48,6 +48,14 @@
     <Reference Include="AspectCore.Extensions.Reflection">
       <HintPath>..\packages\AspectCore.Extensions.Reflection.0.2.4\lib\net45\AspectCore.Extensions.Reflection.dll</HintPath>
     </Reference>
+    <Reference Include="Dapper, Version=1.50.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Dapper.1.50.4\lib\net451\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="DapperExtensions, Version=1.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\DapperExtensions.1.6.3\lib\net45\DapperExtensions.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\MSTest.TestFramework.1.2.0\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.dll</HintPath>
     </Reference>
@@ -68,6 +76,10 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Attributes\ExecuteTests.cs" />
+    <Compile Include="Attributes\DeleteTests.cs" />
+    <Compile Include="Attributes\UpdateTests.cs" />
+    <Compile Include="Attributes\InsertTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Proxy\InterfaceProxyTests.cs" />
     <Compile Include="Attributes\TestInterface.cs" />

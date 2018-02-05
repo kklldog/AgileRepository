@@ -1,13 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Agile.Repository;
-using Agile.Repository.Attributes;
 using Agile.Repository.Proxy;
-using Agile.Repository.Sql;
 
 namespace AgileRepositoryTests.Attributes
 {
@@ -20,7 +14,7 @@ namespace AgileRepositoryTests.Attributes
             Proxy = Agile.Repository.AgileRepository.Proxy;
             Agile.Repository.AgileRepository.SetConfig(new AgileRepositoryConfig()
             {
-                SqlMonitor = (sql, sender) =>
+                SqlMonitor = (sql, paramters) =>
                 {
                     Console.WriteLine(sql);
                 }
@@ -99,9 +93,7 @@ namespace AgileRepositoryTests.Attributes
         [TestMethod()]
         public void QueryByCreaterIsNotNullTest()
         {
-            var proxy = new InterfaceProxy();
-
-            var instance = proxy.CreateProxyInstance<ITestInterface>();
+            var instance = Proxy.CreateProxyInstance<ITestInterface>();
             var result = instance.QueryByCreaterIsNotNull();
 
             Assert.IsNotNull(result);
