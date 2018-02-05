@@ -40,9 +40,35 @@ namespace AgileRepositoryTests.Attributes
             var result = instance.Delete(user);
 
             Assert.IsNotNull(result);
-            Assert.IsTrue(result>0);
+            Assert.IsTrue(result > 0);
 
-            Console.WriteLine("Delete result :{0}",result);
+            Console.WriteLine("Delete result :{0}", result);
+        }
+
+        [TestMethod]
+        public void DeleteEntitiesTest()
+        {
+            var user = new User();
+            user.CreateTime = DateTime.Now;
+            user.Id = Guid.NewGuid().ToString();
+            user.Password = Guid.NewGuid().ToString();
+            user.UserName = "test";
+            var user1 = new User();
+            user1.CreateTime = DateTime.Now;
+            user1.Id = Guid.NewGuid().ToString();
+            user1.Password = Guid.NewGuid().ToString();
+            user1.UserName = "test";
+
+            var instance = Proxy.CreateProxyInstance<ITestInterface>();
+            instance.Insert(user);
+            instance.Insert(user1);
+
+            var result = instance.Delete(new List<User>() { user, user1 });
+
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result > 0);
+
+            Console.WriteLine("Delete result :{0}", result);
         }
 
         [TestMethod]

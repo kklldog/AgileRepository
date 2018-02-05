@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Agile.Repository.Data;
 using Agile.Repository.Proxy;
 using AspectCore.DynamicProxy;
 using AspectCore.DynamicProxy.Parameters;
@@ -14,6 +15,9 @@ namespace Agile.Repository.Attributes
         public string ConnectionName { get; set; }
         public abstract override Task Invoke(AspectContext context, AspectDelegate next);
 
+        public string Provider => string.IsNullOrEmpty(ConnectionName)
+            ? DbProviders.Sqlserver
+            : ConnectionConfig.GetProviderName(ConnectionName);
 
         protected Dictionary<string, object> ToParamterDict(ParameterCollection paramters)
         {

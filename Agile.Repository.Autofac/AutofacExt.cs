@@ -14,8 +14,8 @@ namespace Agile.Repository.Autofac
     {
         public static void RegisterAgileRepository<T>(this ContainerBuilder builder) where T : class
         {
-            var implement = AgileRepository.Proxy.GetProxyType<T>();
-            builder.RegisterType(implement).As<T>();
+            var instance = AgileRepository.Proxy.SingletonInstance<T>();
+            builder.RegisterInstance(instance).As<T>();
         }
 
         public static void RegisterAgileRepositories(this ContainerBuilder builder, string assembleyName)

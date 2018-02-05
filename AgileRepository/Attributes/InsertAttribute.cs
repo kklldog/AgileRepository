@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -16,15 +17,33 @@ namespace Agile.Repository.Attributes
 {
     public class InsertAttribute : SqlAttribute
     {
-
         public override Task Invoke(AspectContext context, AspectDelegate next)
         {
             var paramters = context.GetParameters();
-         
+
             using (var conn = ConnectionFactory.CreateConnection(ConnectionName))
             {
                 var sql = GenericInsertSql(context);
-                var result = (int)QueryHelper.RunExecute(conn, sql, paramters.First().Value);
+                var insertParam = paramters.First();
+                var isIEnumerable = (insertParam as IEnumerable) != null;
+                var result = 0;
+                if (!isIEnumerable)
+                {
+                    result = (int)QueryHelper.RunExecute(conn, sql, paramters.First().Value);
+                }
+                else
+                {
+                    //for insert entities
+                    using (var tran = conn.BeginTransaction())
+                    {
+                        foreach (var p in (IEnumerable)insertParam)
+                        {
+                            result += (int)QueryHelper.RunExecute(conn, tran, sql, p);
+                        }
+
+                        tran.Commit();
+                    }
+                }
                 if (context.ServiceMethod.ReturnType == typeof(bool))
                 {
                     context.ReturnValue = result > 0;
@@ -41,13 +60,10 @@ namespace Agile.Repository.Attributes
 
         private string GenericInsertSql(AspectContext context)
         {
-            var provider = string.IsNullOrEmpty(ConnectionName)
-                ? DbProviders.Sqlserver
-                : ConnectionConfig.GetProviderName(ConnectionName);
-            var builder = SqlBuilderSelecter.Get(provider);
+            var builder = SqlBuilderSelecter.Get(Provider);
             var gt = AgileRepositoryGenericTypeArguments(context);
             var sql = (string)GenericCallHelper.RunGenericMethod(builder.GetType(), "Insert", gt, builder,
-                new object[] {});
+                new object[] { });
 
             return sql;
         }

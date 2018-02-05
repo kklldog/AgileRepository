@@ -36,9 +36,38 @@ namespace AgileRepositoryTests.Attributes
             var instance = Proxy.CreateProxyInstance<ITestInterface>();
             var result = instance.Update(user);
             Assert.IsNotNull(result);
-            Assert.IsTrue(result>0);
+            Assert.IsTrue(result > 0);
 
-            Console.WriteLine("Update result :{0}",result);
+            Console.WriteLine("Update result :{0}", result);
+        }
+
+        [TestMethod]
+        public void UpdateEntitiesTest()
+        {
+            var user = new User();
+            user.CreateTime = DateTime.Now;
+            user.Id = Guid.NewGuid().ToString();
+            user.Password = Guid.NewGuid().ToString();
+            user.UserName = "updatetest" + Guid.NewGuid().ToString(); ;
+            var user1 = new User();
+            user1.CreateTime = DateTime.Now;
+            user1.Id = Guid.NewGuid().ToString();
+            user1.Password = Guid.NewGuid().ToString();
+            user1.UserName = "updatetest" + Guid.NewGuid().ToString(); ;
+
+            var instance = Proxy.CreateProxyInstance<ITestInterface>();
+
+            instance.Insert(user);
+            instance.Insert(user1);
+
+            user.Password = "1";
+            user1.Password = "2";
+
+            var result = instance.Update(new List<User>() { user, user1 });
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result > 0);
+
+            Console.WriteLine("Update result :{0}", result);
         }
     }
 }

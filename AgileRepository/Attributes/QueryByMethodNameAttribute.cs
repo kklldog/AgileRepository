@@ -34,10 +34,7 @@ namespace Agile.Repository.Attributes
 
         private string GenericSqlByMethodName(AspectContext context, AspectDelegate next)
         {
-            var provider = string.IsNullOrEmpty(ConnectionName)
-                ? DbProviders.Sqlserver
-                : ConnectionConfig.GetProviderName(ConnectionName);
-            var builder = SqlBuilderSelecter.Get(provider);
+            var builder = SqlBuilderSelecter.Get(Provider);
 
             var gt = AgileRepositoryGenericTypeArguments(context);
             //get IAgileRepository<TEntity> 's TEntity for MethodNameToSql's T

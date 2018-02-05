@@ -38,7 +38,7 @@ namespace Agile.Repository.Attributes
                 var result = (int)QueryHelper.RunExecute(conn, Sql, sqlParamters);
                 if (context.ServiceMethod.ReturnType == typeof(bool))
                 {
-                    context.ReturnValue = result > 0;
+                    context.ReturnValue = result >= 0;
                 }
                 else
                 {

@@ -48,6 +48,9 @@ namespace AgileRepositoryTests.Attributes
         [QueryByMethodName]
         IEnumerable<User> QueryByCreaterIsNotNull();
 
+        [QueryAll]
+        IEnumerable<User> QueryAll();
+
         [CountBySql("Select count(*) from users")]
         int TestCount();
 
@@ -60,14 +63,25 @@ namespace AgileRepositoryTests.Attributes
         [CountByMethodName]
         int CountByIdAndUserName(string id, string userName);
 
+        [CountAll]
+        int CountAll();
+
         [Insert]
         int Insert(User user);
+        [Insert]
+        int Insert(IEnumerable<User> users);
 
         [Update]
         int Update(User user);
 
+        [Update]
+        int Update(IEnumerable<User> users);
+
         [Delete]
         int Delete(User user);
+
+        [Delete]
+        int Delete(IEnumerable<User> users);
 
         [DeleteByMethodName]
         int DeleteByUserName(string userName);

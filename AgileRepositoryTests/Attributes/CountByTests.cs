@@ -60,6 +60,15 @@ namespace AgileRepositoryTests.Attributes
             Console.WriteLine("count:{0}", result);
         }
 
-      
+        [TestMethod]
+        public void CountAllTest()
+        {
+            var instance = Proxy.CreateProxyInstance<ITestInterface>();
+            var result = instance.CountAll();
+
+            Assert.IsNotNull(result);
+            Console.WriteLine("count:{0}", result);
+        }
+
     }
 }

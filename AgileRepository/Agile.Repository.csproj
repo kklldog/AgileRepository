@@ -61,9 +61,11 @@
   <ItemGroup>
     <Compile Include="AgileRepository.cs" />
     <Compile Include="AgileRepositoryConfig.cs" />
+    <Compile Include="Attributes\CountAllAttribute.cs" />
     <Compile Include="Attributes\CountByMethodNameAttribute.cs" />
     <Compile Include="Attributes\DeleteByMethodNameAttribute.cs" />
     <Compile Include="Attributes\DeleteAttribute.cs" />
+    <Compile Include="Attributes\QueryAllAttribute.cs" />
     <Compile Include="Attributes\SqlAttribute.cs" />
     <Compile Include="Attributes\UpdateAttribute.cs" />
     <Compile Include="Attributes\InsertAttribute.cs" />

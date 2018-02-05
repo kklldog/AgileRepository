@@ -14,35 +14,32 @@ using AspectCore.DynamicProxy.Parameters;
 
 namespace Agile.Repository.Attributes
 {
-    public class DeleteByMethodNameAttribute : SqlAttribute
+    public class QueryAllAttribute : SqlAttribute
     {
         public override Task Invoke(AspectContext context, AspectDelegate next)
         {
+            var sql = GenericSql(context, next);
+
             var paramters = context.GetParameters();
             var queryParams = ToParamterDict(paramters);
             using (var conn = ConnectionFactory.CreateConnection(ConnectionName))
             {
-                var sql = GenericDeleteSql(context);
-                var result = (int)QueryHelper.RunExecute(conn, sql, queryParams);
-                if (context.ServiceMethod.ReturnType == typeof(bool))
-                {
-                    context.ReturnValue = result > 0;
-                }
-                else
-                {
-                    context.ReturnValue = result;
-                }
+                var gt = AgileRepositoryGenericTypeArguments(context);
+                var result = QueryHelper.RunGenericQuery(gt.First(), conn, sql, queryParams);
+                context.ReturnValue = result;
             }
 
             return context.Break();
         }
 
-        private string GenericDeleteSql(AspectContext context)
+        private string GenericSql(AspectContext context, AspectDelegate next)
         {
             var builder = SqlBuilderSelecter.Get(Provider);
+
             var gt = AgileRepositoryGenericTypeArguments(context);
-            var sql = (string)GenericCallHelper.RunGenericMethod(builder.GetType(), "MethodNameToSql", gt, builder,
-                new object[] { context.ProxyMethod.Name });
+            //get IAgileRepository<TEntity> 's TEntity for MethodNameToSql's T
+            var sql = (string)GenericCallHelper.RunGenericMethod(builder.GetType(), "Select", gt, builder,
+                new object[] {});
 
             return sql;
         }

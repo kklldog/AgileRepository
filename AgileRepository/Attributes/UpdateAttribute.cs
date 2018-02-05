@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -19,11 +20,29 @@ namespace Agile.Repository.Attributes
         public override Task Invoke(AspectContext context, AspectDelegate next)
         {
             var paramters = context.GetParameters();
-         
+
             using (var conn = ConnectionFactory.CreateConnection(ConnectionName))
             {
                 var sql = GenericUpdateSql(context);
-                var result = (int)QueryHelper.RunExecute(conn, sql, paramters.First().Value);
+                var updateParam = paramters.First().Value;
+                int result = 0;
+                if ((updateParam as IEnumerable) == null)
+                {
+                    result = (int)QueryHelper.RunExecute(conn, sql, paramters.First().Value);
+                }
+                else
+                {
+                    using (var tran = conn.BeginTransaction())
+                    {
+                        foreach (var p in (updateParam as IEnumerable))
+                        {
+                            result =+ (int)QueryHelper.RunExecute(conn,tran, sql, p);
+                        }
+
+                        tran.Commit();
+                    }
+                }
+
                 if (context.ServiceMethod.ReturnType == typeof(bool))
                 {
                     context.ReturnValue = result > 0;
@@ -40,13 +59,10 @@ namespace Agile.Repository.Attributes
 
         private string GenericUpdateSql(AspectContext context)
         {
-            var provider = string.IsNullOrEmpty(ConnectionName)
-                ? DbProviders.Sqlserver
-                : ConnectionConfig.GetProviderName(ConnectionName);
-            var builder = SqlBuilderSelecter.Get(provider);
+            var builder = SqlBuilderSelecter.Get(Provider);
             var gt = AgileRepositoryGenericTypeArguments(context);
             var sql = (string)GenericCallHelper.RunGenericMethod(builder.GetType(), "UpdateById", gt, builder,
-                new object[] {});
+                new object[] { });
 
             return sql;
         }

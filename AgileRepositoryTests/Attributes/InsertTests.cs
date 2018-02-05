@@ -39,9 +39,35 @@ namespace AgileRepositoryTests.Attributes
 
             Assert.IsNotNull(result);
 
-            Assert.IsTrue(result>0);
+            Assert.IsTrue(result > 0);
 
-            Console.WriteLine("insert result :{0}",result);
+            Console.WriteLine("insert result :{0}", result);
+        }
+
+
+        [TestMethod]
+        public void InsertEntitiesTest()
+        {
+            var user = new User();
+            user.CreateTime = DateTime.Now;
+            user.Id = Guid.NewGuid().ToString();
+            user.Password = "12345";
+            user.UserName = Guid.NewGuid().ToString();
+            var user1 = new User();
+            user1.CreateTime = DateTime.Now;
+            user1.Id = Guid.NewGuid().ToString();
+            user1.Password = "12345";
+            user1.UserName = Guid.NewGuid().ToString();
+
+            var instance = Proxy.CreateProxyInstance<ITestInterface>();
+
+            var result = instance.Insert(new List<User>() { user, user1 });
+
+            Assert.IsNotNull(result);
+
+            Assert.IsTrue(result > 0);
+
+            Console.WriteLine("insert result :{0}", result);
         }
     }
 }

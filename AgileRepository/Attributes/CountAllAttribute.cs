@@ -14,35 +14,30 @@ using AspectCore.DynamicProxy.Parameters;
 
 namespace Agile.Repository.Attributes
 {
-    public class DeleteByMethodNameAttribute : SqlAttribute
+    public class CountAllAttribute : SqlAttribute
     {
         public override Task Invoke(AspectContext context, AspectDelegate next)
         {
+            var sql = GenericSql(context, next);
+
             var paramters = context.GetParameters();
             var queryParams = ToParamterDict(paramters);
             using (var conn = ConnectionFactory.CreateConnection(ConnectionName))
             {
-                var sql = GenericDeleteSql(context);
-                var result = (int)QueryHelper.RunExecute(conn, sql, queryParams);
-                if (context.ServiceMethod.ReturnType == typeof(bool))
-                {
-                    context.ReturnValue = result > 0;
-                }
-                else
-                {
-                    context.ReturnValue = result;
-                }
+                var result = QueryHelper.RunGenericCount(context.ServiceMethod.ReturnType, conn, sql, queryParams);
+                context.ReturnValue = result;
             }
 
             return context.Break();
         }
 
-        private string GenericDeleteSql(AspectContext context)
+        private string GenericSql(AspectContext context, AspectDelegate next)
         {
             var builder = SqlBuilderSelecter.Get(Provider);
+
             var gt = AgileRepositoryGenericTypeArguments(context);
-            var sql = (string)GenericCallHelper.RunGenericMethod(builder.GetType(), "MethodNameToSql", gt, builder,
-                new object[] { context.ProxyMethod.Name });
+            var sql = (string)GenericCallHelper.RunGenericMethod(builder.GetType(), "Count", gt, builder,
+                new object[] {});
 
             return sql;
         }

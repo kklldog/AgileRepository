@@ -102,6 +102,19 @@ namespace AgileRepositoryTests.Attributes
                 Console.WriteLine("id:{0} name:{1}", user.Id, user.UserName);
             }
         }
+
+        [TestMethod]
+        public void QueryAllTest()
+        {
+            var instance = Proxy.CreateProxyInstance<ITestInterface>();
+            var result = instance.QueryAll();
+
+            Assert.IsNotNull(result);
+            foreach (var user in result)
+            {
+                Console.WriteLine("id:{0} name:{1}", user.Id, user.UserName);
+            }
+        }
      
     }
 }

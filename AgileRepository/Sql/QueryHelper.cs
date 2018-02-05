@@ -25,7 +25,7 @@ namespace Agile.Repository.Sql
                     if (_queryMethod == null)
                     {
                         _queryMethod = GenericCallHelper.GetGenericMethod(typeof(QueryHelper), "Query",
-                            new Type[]{returnType});
+                            new Type[] { returnType });
                     }
                 }
             }
@@ -45,7 +45,7 @@ namespace Agile.Repository.Sql
                     if (_countMethod == null)
                     {
                         _countMethod = GenericCallHelper.GetGenericMethod(typeof(QueryHelper), "Count",
-                            new Type[]{ returnType });
+                            new Type[] { returnType });
                     }
                 }
             }
@@ -65,6 +65,17 @@ namespace Agile.Repository.Sql
 
             return conn.Execute(sql, paramters);
         }
+
+        public static object RunExecute(IDbConnection conn, IDbTransaction tran, string sql, object paramters)
+        {
+            if (AgileRepository.Config != null && AgileRepository.Config.SqlMonitor != null)
+            {
+                AgileRepository.Config.SqlMonitor(sql, paramters);
+            }
+
+            return conn.Execute(sql, paramters, tran);
+        }
+
 
         public object Query<T>(IDbConnection conn, string sql, object paramters) where T : class
         {
