@@ -9,9 +9,9 @@
     }
 
 ## 依赖
-AspectCore 
-Dapper 
-DapperExtensions 
+AspectCore  
+Dapper  
+DapperExtensions  
 ## 实例
 ### 根据sql查询 
         [QueryBySql("SELECT * FROM USERS")]
