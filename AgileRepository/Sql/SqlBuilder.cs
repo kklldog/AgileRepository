@@ -33,7 +33,7 @@ namespace Agile.Repository.Sql
     {
         public string Name { get; set; }
 
-        public string SqlString { get; set; }
+        public string SqlStringPatten { get; set; }
 
     }
 
@@ -92,12 +92,48 @@ namespace Agile.Repository.Sql
                 new SqlInnerKey()
                 {
                     Name = "IsNull",
-                    SqlString = "Is Null"
+                    SqlStringPatten = " Is Null"
                 },
                 new SqlInnerKey()
                 {
                     Name = "IsNotNull",
-                    SqlString = "Is Not Null"
+                    SqlStringPatten = " Is Not Null"
+                },
+                new SqlInnerKey()
+                {
+                    Name = "GreaterThen",
+                    SqlStringPatten = ">{1}{0}"
+                }
+                ,
+                new SqlInnerKey()
+                {
+                    Name = "GreaterEqual",
+                    SqlStringPatten = ">={1}{0}"
+                },
+                new SqlInnerKey()
+                {
+                    Name = "LessThen",
+                    SqlStringPatten = "<{1}{0}"
+                },
+                new SqlInnerKey()
+                {
+                    Name = "LessEqual",
+                    SqlStringPatten = "<={1}{0}"
+                },
+                new SqlInnerKey()
+                {
+                    Name = "Not",
+                    SqlStringPatten = "!={1}{0}"
+                },
+                new SqlInnerKey()
+                {
+                    Name = "In",
+                    SqlStringPatten = " In {1}{0}"
+                },
+                new SqlInnerKey()
+                {
+                    Name = "NotIn",
+                    SqlStringPatten = " Not In {1}{0}"
                 }
             };
         }
@@ -314,7 +350,7 @@ namespace Agile.Repository.Sql
                     SqlInnerKey innerKey = null;
                     foreach (var sqlInnerKey in InnerKeys)
                     {
-                        if (param.Contains(sqlInnerKey.Name))
+                        if (param.EndsWith(sqlInnerKey.Name))
                         {
                             innerKey = sqlInnerKey;
                             break;
@@ -324,7 +360,7 @@ namespace Agile.Repository.Sql
                     {
                         //username is null ...
                         param = param.Replace(innerKey.Name, "");
-                        where.AppendFormat(" {0} {1}", param, innerKey.SqlString);
+                        where.AppendFormat(" {0}{1}", param, string.Format(innerKey.SqlStringPatten,param,QueryParamSyntaxMark));
                     }
                     else
                     {
