@@ -89,6 +89,7 @@
     <Compile Include="Utils\GenericCallHelper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Agile.Repository.nuspec" />
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
