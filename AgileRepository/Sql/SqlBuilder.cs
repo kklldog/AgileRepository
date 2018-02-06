@@ -107,30 +107,68 @@ namespace Agile.Repository.Sql
 
         public virtual string Select<T>() where T : class
         {
+            string sql = "";
+            var cacheKey = $"Select_{typeof(T)}";
+            var hit = SqlCacheDict.TryGetValue(cacheKey, out sql);
+            if (hit)
+            {
+                return sql;
+            }
+
             var map = SqlGenerator.Configuration.GetMap<T>();
-            var sql = SqlGenerator.Select(map, null, null, new Dictionary<string, object>());
+            sql = SqlGenerator.Select(map, null, null, new Dictionary<string, object>());
+
+            SqlCacheDict.TryAdd(cacheKey, sql);
 
             return sql;
         }
 
         public string Count<T>() where T : class
         {
+            string sql = "";
+            var cacheKey = $"Count_{typeof(T)}";
+            var hit = SqlCacheDict.TryGetValue(cacheKey, out sql);
+            if (hit)
+            {
+                return sql;
+            }
+
             var map = SqlGenerator.Configuration.GetMap<T>();
-            var sql = SqlGenerator.Count(map, null, new Dictionary<string, object>());
+            sql = SqlGenerator.Count(map, null, new Dictionary<string, object>());
+
+            SqlCacheDict.TryAdd(cacheKey, sql);
 
             return sql;
         }
 
         public string Insert<T>() where T : class
         {
+            string sql = "";
+            var cacheKey = $"Insert_{typeof(T)}";
+            var hit = SqlCacheDict.TryGetValue(cacheKey, out sql);
+            if (hit)
+            {
+                return sql;
+            }
+
             var map = SqlGenerator.Configuration.GetMap<T>();
-            var sql = SqlGenerator.Insert(map);
+            sql = SqlGenerator.Insert(map);
+
+            SqlCacheDict.TryAdd(cacheKey, sql);
 
             return sql;
         }
 
         public string Update<T>() where T : class
         {
+            string sql = "";
+            var cacheKey = $"Update_{typeof(T)}";
+            var hit = SqlCacheDict.TryGetValue(cacheKey, out sql);
+            if (hit)
+            {
+                return sql;
+            }
+
             var map = SqlGenerator.Configuration.GetMap<T>();
             var columns = map.Properties.Where(p => !(p.Ignored || p.IsReadOnly) && p.KeyType == KeyType.NotAKey);
             if (!columns.Any())
@@ -140,37 +178,72 @@ namespace Agile.Repository.Sql
 
             var setSql =
                 columns.Select(p => $"{SqlGenerator.GetColumnName(map, p, false)} = {QueryParamSyntaxMark}{p.Name}");
+            sql = $"UPDATE {SqlGenerator.GetTableName(map)} SET {setSql.AppendStrings()} ";
 
-            var update = $"UPDATE {SqlGenerator.GetTableName(map)} SET {setSql.AppendStrings()} ";
+            SqlCacheDict.TryAdd(cacheKey, sql);
 
-            return update;
+            return sql;
         }
 
         public string UpdateById<T>() where T : class
         {
+            string sql = "";
+            var cacheKey = $"UpdateById_{typeof(T)}";
+            var hit = SqlCacheDict.TryGetValue(cacheKey, out sql);
+            if (hit)
+            {
+                return sql;
+            }
+
             var update = Update<T>();
             var map = SqlGenerator.Configuration.GetMap<T>();
             var keys = map.Properties.Where(p => p.KeyType != KeyType.NotAKey);
             var whereSql = keys.Select(k => string.Format("{0} = {1}{0}", k.Name, QueryParamSyntaxMark));
 
-            return $"{update} WHERE {whereSql.AppendStrings()}";
+            sql = $"{update} WHERE {whereSql.AppendStrings()}";
+
+            SqlCacheDict.TryAdd(cacheKey, sql);
+
+            return sql;
         }
 
         public string Delete<T>() where T : class
         {
-            var map = SqlGenerator.Configuration.GetMap<T>();
-            return $"DELETE FROM {SqlGenerator.GetTableName(map)}";
+            string sql = "";
+            var cacheKey = $"Delete_{typeof(T)}";
+            var hit = SqlCacheDict.TryGetValue(cacheKey, out sql);
+            if (hit)
+            {
+                return sql;
+            }
 
+            var map = SqlGenerator.Configuration.GetMap<T>();
+            sql = $"DELETE FROM {SqlGenerator.GetTableName(map)}";
+
+            SqlCacheDict.TryAdd(cacheKey, sql);
+
+            return sql;
         }
 
         public string DeleteById<T>() where T : class
         {
+            string sql = "";
+            var cacheKey = $"DeleteById_{typeof(T)}";
+            var hit = SqlCacheDict.TryGetValue(cacheKey, out sql);
+            if (hit)
+            {
+                return sql;
+            }
+
             var delete = Delete<T>();
             var map = SqlGenerator.Configuration.GetMap<T>();
             var keys = map.Properties.Where(p => p.KeyType != KeyType.NotAKey);
             var whereSql = keys.Select(k => string.Format("{0} = {1}{0}", k.Name, QueryParamSyntaxMark));
+            sql = $"{delete} WHERE {whereSql.AppendStrings()}";
 
-            return $"{delete} WHERE {whereSql.AppendStrings()}";
+            SqlCacheDict.TryAdd(cacheKey, sql);
+
+            return sql;
         }
 
         protected void SplitParams(Queue<string> queryparams, string[] opKeys, string methodName)
@@ -300,7 +373,7 @@ namespace Agile.Repository.Sql
             }
 
             string sql = "";
-            var cacheKey = $"{typeof(T)}_{methodName}";
+            var cacheKey = $"MethodNameToSql_{typeof(T)}_{methodName}";
             var hit = SqlCacheDict.TryGetValue(cacheKey, out sql);
             if (hit)
             {
