@@ -1,5 +1,6 @@
 # AgileRepository
-这是一个可以帮助你快速开发Repository的lib。有点像Springdata JPA的根据方法名、注解来自动生成查询方法体。对于一些简单的查询，只需要定义接口就行了，实现都不用。
+这是一个可以帮助你快速开发Repository的lib。有点像Springdata JPA根据方法名、注解来自动生成查询方法的功能。  
+对于一些简单的查询，只需要定义接口就行了，实现都不用。
 
     public interface IUserRepository:IAgileRepository<Users>
     {
@@ -7,7 +8,6 @@
         IEnumerable<Users> QueryByUserName(string userName);
 
     }
-
 ## 依赖
 AspectCore  
 Dapper  
@@ -72,3 +72,8 @@ DapperExtensions
 ### 执行非查询sql
         [ExecuteBySql("Delete from [users] where id =@id ")]
         int Execute(string id);
+## 支持的where关键字
+And QueryByUserNameAndId  
+Or QueryByUserNameOrId  
+IsNull QueryByUserNameIsNull  
+IsNotNull QueryByUserNameIsNotNull  
