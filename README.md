@@ -2,16 +2,19 @@
 这是一个可以帮助你快速开发Repository的lib。有点像Springdata JPA根据方法名、注解来自动生成查询方法的功能。  
 对于一些简单的查询，只需要定义接口就行了，实现都不用。
 
+## 依赖
+AspectCore  
+Dapper  
+DapperExtensions  
+## 使用
     public interface IUserRepository:IAgileRepository<Users>
     {
         [QueryByMethodName]
         IEnumerable<Users> QueryByUserName(string userName);
 
     }
-## 依赖
-AspectCore  
-Dapper  
-DapperExtensions  
+    var repository = AgileRepository.Proxy.SingletonInstance<IUserRepository>();
+    repository.QueryByUserName(); 
 ## 实例
 ### 根据sql查询 
         [QueryBySql("SELECT * FROM USERS")]
