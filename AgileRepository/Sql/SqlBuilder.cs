@@ -35,6 +35,8 @@ namespace Agile.Repository.Sql
 
         public string SqlStringPatten { get; set; }
 
+        public static string DefaultSqlStringPatten => "={1}{0}";
+
     }
 
     public class MethodPrefixsKey
@@ -134,6 +136,11 @@ namespace Agile.Repository.Sql
                 {
                     Name = "NotIn",
                     SqlStringPatten = " Not In {1}{0}"
+                },
+                new SqlInnerKey()
+                {
+                    Name = "Like",
+                    SqlStringPatten = " Like {1}{0}"
                 }
             };
         }
@@ -353,21 +360,21 @@ namespace Agile.Repository.Sql
                         if (param.EndsWith(sqlInnerKey.Name))
                         {
                             innerKey = sqlInnerKey;
-                            break;
+                            //break;
                         }
                     }
+                    var sqlParamPatten = "";
                     if (innerKey != null)
                     {
-                        //username is null ...
+                        sqlParamPatten = innerKey.SqlStringPatten;
                         param = param.Replace(innerKey.Name, "");
-                        where.AppendFormat(" {0}{1}", param, string.Format(innerKey.SqlStringPatten,param,QueryParamSyntaxMark));
                     }
                     else
                     {
-                        //username=@username
-                        where.AppendFormat(" {0}={1}{0}", param, QueryParamSyntaxMark);
+                        sqlParamPatten = SqlInnerKey.DefaultSqlStringPatten;
                     }
 
+                    where.AppendFormat(" {0}{1}", param, string.Format(sqlParamPatten, param, QueryParamSyntaxMark));
                 }
             }
 

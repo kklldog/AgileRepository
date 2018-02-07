@@ -93,6 +93,13 @@ namespace AgileRepositoryTests.Sql
             Assert.AreEqual(where,
                 " UserName In @UserName Or Id Not In @Id");
             Console.WriteLine(where);
+
+            name = "CountByUserNameLike";
+            where = builder.MethodNameToWhere(name);
+            Assert.IsNotNull(where);
+            Assert.AreEqual(where,
+                " UserName Like @UserName");
+            Console.WriteLine(where);
         }
     }
 }
