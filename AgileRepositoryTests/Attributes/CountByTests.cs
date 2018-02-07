@@ -17,7 +17,8 @@ namespace AgileRepositoryTests.Attributes
                 SqlMonitor = (sql, paramters ) =>
                 {
                     Console.WriteLine(sql);
-                }
+                },
+                ConnectionName = "conn"
             });
         }
 

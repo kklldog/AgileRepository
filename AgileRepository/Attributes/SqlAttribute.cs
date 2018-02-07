@@ -12,7 +12,26 @@ namespace Agile.Repository.Attributes
 {
     public abstract class SqlAttribute : AbstractInterceptorAttribute
     {
-        public string ConnectionName { get; set; }
+        private string _connectionName;
+
+        public string ConnectionName
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(_connectionName))
+                {
+                    return _connectionName;
+                }
+                if (!string.IsNullOrEmpty(AgileRepository.Config.ConnectionName))
+                {
+                    return AgileRepository.Config.ConnectionName;
+                }
+
+                return ConnectionConfig.DefaultConnName;
+            }
+            set => _connectionName = value;
+        }
+
         public abstract override Task Invoke(AspectContext context, AspectDelegate next);
 
         public string Provider => string.IsNullOrEmpty(ConnectionName)

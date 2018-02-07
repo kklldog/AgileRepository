@@ -10,17 +10,7 @@ namespace Agile.Repository.Data
 {
     public class ConnectionConfig
     {
-        public static readonly string DefaultConnectionString;
-
         public const string DefaultConnName = "defaultConn";
-        static ConnectionConfig()
-        {
-
-            DefaultConnectionString = ConfigurationManager.ConnectionStrings[DefaultConnName].ConnectionString;
-#if DEBUG
-            Console.WriteLine("DB Connectionstring :{0}", DefaultConnectionString);
-#endif
-        }
 
         public static string GetConnectionString(string connectionName)
         {

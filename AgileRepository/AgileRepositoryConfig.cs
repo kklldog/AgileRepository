@@ -11,5 +11,7 @@ namespace Agile.Repository
 //        public string[] AssbemlyNames { get; set; }
 
         public Action<string,object> SqlMonitor { get; set; }
+
+        public string ConnectionName { get; set; }
     }
 }

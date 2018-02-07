@@ -21,7 +21,7 @@ namespace Agile.Repository.Data
         {
             IDbConnection connection = new T();
             connection.ConnectionString = string.IsNullOrEmpty(connectionName)
-                ? ConnectionConfig.DefaultConnectionString
+                ? ConnectionConfig.GetConnectionString(ConnectionConfig.DefaultConnName)
                 : ConnectionConfig.GetConnectionString(connectionName);
             connection.Open();
             return connection;
