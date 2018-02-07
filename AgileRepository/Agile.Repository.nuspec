@@ -2,14 +2,14 @@
 <package >
   <metadata>
     <id>$id$</id>
-    <version>0.0.1</version>
+    <version>$version$</version>
     <title>$title$</title>
     <authors>mj.zhou</authors>
     <owners>mj.zhou</owners>
     <projectUrl>https://github.com/kklldog/AgileRepository</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>A fast reposiltory lib like springdata to query by interface only .</description>
-    <releaseNotes>this is a test version .</releaseNotes>
+    <description>A fast repository lib like springdata to query by interface only .</description>
+    <releaseNotes>support more key words .</releaseNotes>
     <copyright>Copyright 2018</copyright>
     <tags>Repository Dapper</tags>
   </metadata>
