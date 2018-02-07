@@ -141,6 +141,11 @@ namespace Agile.Repository.Sql
                 {
                     Name = "Like",
                     SqlStringPatten = " Like {1}{0}"
+                },
+                new SqlInnerKey()
+                {
+                    Name = "NotLike",
+                    SqlStringPatten = " Not Like {1}{0}"
                 }
             };
         }

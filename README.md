@@ -14,8 +14,17 @@ DapperExtensions
 
     }
     var repository = AgileRepository.Proxy.SingletonInstance<IUserRepository>();
-    repository.QueryByUserName(); 
-## 实例
+    repository.QueryByUserName("admin"); 
+## 配置
+        AgileRepository.SetConfig(new AgileRepositoryConfig()
+        {
+                SqlMonitor = (sql, paramters ) =>
+                {
+                        Console.WriteLine(sql);
+                },
+                ConnectionName = "conn"
+        });
+## 示例
 ### 根据sql查询 
         [QueryBySql("SELECT * FROM USERS")]
         IEnumerable<User> TestSql();
@@ -76,7 +85,18 @@ DapperExtensions
         [ExecuteBySql("Delete from [users] where id =@id ")]
         int Execute(string id);
 ## 支持的where关键字
-And QueryByUserNameAndId  
-Or QueryByUserNameOrId  
-IsNull QueryByUserNameIsNull  
-IsNotNull QueryByUserNameIsNotNull  
+Key | Name | Where 
+--- | ----- |-----
+And | QueryByUserNameAndId | where UserName=@UserName And Id=@Id
+Or | QueryByUserNameOrId  | where UserName=@UserName Or Id=@Id
+IsNull | QueryByUserNameIsNull | where UserName Is Null
+IsNotNull | QueryByUserNameIsNotNull | where UserName Is Not Null
+GreaterThenNull | QueryByAgeGreaterThen | where Age>@Age
+GreaterEqualNull | QueryByAgeGreaterEqual | where Age>=@Age
+LessThenNull | QueryByAgeLessThen  | where Age<@Age
+LessEqualNull | QueryByAgeLessEqual | where Age<=@Age
+Not | QueryByAgeNot | where Age!=@Age
+In | QueryByUserNameIn | where UserName in @UserName
+NotIn | QueryByUserNameNotIn | where UserName Not in @UserName
+Like | QueryByUserNameLike | where UserName Like @UserName
+NotLike | QueryByUserNameLike | where UserName Not Like @UserName
