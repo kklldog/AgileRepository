@@ -91,12 +91,12 @@ And | QueryByUserNameAndId | where UserName=@UserName And Id=@Id
 Or | QueryByUserNameOrId  | where UserName=@UserName Or Id=@Id
 IsNull | QueryByUserNameIsNull | where UserName Is Null
 IsNotNull | QueryByUserNameIsNotNull | where UserName Is Not Null
-GreaterThenNull | QueryByAgeGreaterThen | where Age>@Age
-GreaterEqualNull | QueryByAgeGreaterEqual | where Age>=@Age
-LessThenNull | QueryByAgeLessThen  | where Age<@Age
-LessEqualNull | QueryByAgeLessEqual | where Age<=@Age
+GreaterThen | QueryByAgeGreaterThen | where Age>@Age
+GreaterEqual | QueryByAgeGreaterEqual | where Age>=@Age
+LessThen | QueryByAgeLessThen  | where Age<@Age
+LessEqual | QueryByAgeLessEqual | where Age<=@Age
 Not | QueryByAgeNot | where Age!=@Age
 In | QueryByUserNameIn | where UserName in @UserName
 NotIn | QueryByUserNameNotIn | where UserName Not in @UserName
 Like | QueryByUserNameLike | where UserName Like @UserName
-NotLike | QueryByUserNameLike | where UserName Not Like @UserName
+NotLike | QueryByUserNameNotLike | where UserName Not Like @UserName
