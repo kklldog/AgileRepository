@@ -3,10 +3,10 @@
 对于一些简单的查询，只需要定义接口就行了，实现都不用。
 
 ## 依赖
-AspectCore > 0.2.4  
-Dapper > 1.50.4  
-DapperExtensions > 1.6.3  
-System.Threading.Tasks.Extensions > 4.3.0  
+AspectCore >= 0.2.4  
+Dapper >= 1.50.4  
+DapperExtensions >= 1.6.3  
+System.Threading.Tasks.Extensions >= 4.3.0  
 ## 使用
     public interface IUserRepository:IAgileRepository<Users>
     {
